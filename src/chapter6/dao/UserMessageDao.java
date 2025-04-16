@@ -44,6 +44,7 @@ public class UserMessageDao {
 				}
 			}
 
+
 			sql.append("ORDER BY created_date DESC limit " + num);
 			ps = connection.prepareStatement(sql.toString());
 			ps.setString(1, start);

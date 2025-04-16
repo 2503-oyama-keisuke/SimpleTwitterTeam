@@ -36,6 +36,7 @@ public class TopServlet extends HttpServlet {
 		String start = request.getParameter("start");
 		String end = request.getParameter("end");
 		List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
+
 		request.setAttribute("likeSearch", 1);
 
 		if (!StringUtils.isBlank(radiobutton) && radiobutton.equals("contain")) {
