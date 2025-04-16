@@ -58,6 +58,7 @@
 			<input type="date" id="end" name="end" value="${end}">
 			<input type="submit" value="絞り込み">
 		</form>
+
 		<div class = "search">
 			<form action = "./" action = "get">
 				つぶやき：
@@ -65,8 +66,12 @@
 				<input type="radio" name="radiobutton" value="startFrom" checked="checked">
 				から始まる
 				<input type= "submit" value = "検索">
+				<input type="radio" name="radiobutton" value="contain" checked="checked">
+				を含む
+				<input type= "submit" value = "検索">
 				<input type="radio" name="radiobutton" value="same" checked="checked">
-			完全⼀致 <input type="submit" value="検索">
+				完全⼀致
+				<input type="submit" value="検索">
 			</form>
 		</div>
 

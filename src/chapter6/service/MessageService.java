@@ -19,23 +19,26 @@ public class MessageService {
 
 	public void insert(Message message) {
 
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            new MessageDao().insert(connection, message);
-            commit(connection);
-        } catch (RuntimeException e) {
-            rollback(connection);
-            throw e;
-        } catch (Error e) {
-            rollback(connection);
-            throw e;
-        } finally {
-            close(connection);
-        }
-    }
+
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			new MessageDao().insert(connection, message);
+			commit(connection);
+		} catch (RuntimeException e) {
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
 
 	public List<UserMessage> select(String userId, String start, String end, String searchWord, String likeSearch) {
+
 		final int LIMIT_NUM = 1000;
 		Connection connection = null;
 		try {
@@ -60,9 +63,9 @@ public class MessageService {
 				end = dateTimeFormat.format(cl.getTime());
 			}
 
-			// 完全一致検索用に変更
 			List<UserMessage> messages = new UserMessageDao().select(connection, id, start, end, searchWord, likeSearch,
 					LIMIT_NUM);
+
 			return messages;
 
 		} catch (RuntimeException e) {

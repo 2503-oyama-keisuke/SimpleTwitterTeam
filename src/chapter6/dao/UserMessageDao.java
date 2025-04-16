@@ -16,7 +16,8 @@ import chapter6.exception.SQLRuntimeException;
 
 public class UserMessageDao {
 
-	public List<UserMessage> select(Connection connection, Integer userId, String start, String end, String searchWord, String likeSearch, int num) {
+	public List<UserMessage> select(Connection connection, Integer userId, String start, String end, String searchWord,
+			String likeSearch, int num) {
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
@@ -32,7 +33,7 @@ public class UserMessageDao {
 			sql.append("ON messages.user_id = users.id ");
 			sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
 
-			if(userId != null) {
+			if (userId != null) {
 				sql.append("AND user_id = ? ");
 			}
 
@@ -46,7 +47,7 @@ public class UserMessageDao {
 			ps.setString(1, start);
 			ps.setString(2, end);
 
-			if(userId != null) {
+			if (userId != null) {
 				ps.setInt(3, userId);
 
 				if (!StringUtils.isBlank(searchWord)) {
@@ -58,17 +59,28 @@ public class UserMessageDao {
 				}
 			}
 
-//			if (userId != null) {
-//				ps.setInt(3, userId);
-//
-//				if (!StringUtils.isBlank(searchWord)) {
-//					ps.setString(4, searchWord);
-//				}
-//			} else {
-//				if (!StringUtils.isBlank(searchWord)) {
-//					ps.setString(3, searchWord);
-//				}
-//			}
+			if (userId != null) {
+				ps.setInt(3, userId);
+
+				if (!StringUtils.isBlank(searchWord)) {
+					ps.setString(4, "%" + searchWord + "%");
+				}
+			} else {
+				if (!StringUtils.isBlank(searchWord)) {
+					ps.setString(3, "%" + searchWord + "%");
+				}
+			}
+			if (userId != null) {
+				ps.setInt(3, userId);
+
+				if (!StringUtils.isBlank(searchWord)) {
+					ps.setString(4, searchWord);
+				}
+			} else {
+				if (!StringUtils.isBlank(searchWord)) {
+					ps.setString(3, searchWord);
+				}
+			}
 
 			ResultSet rs = ps.executeQuery();
 
