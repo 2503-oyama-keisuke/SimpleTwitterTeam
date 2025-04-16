@@ -46,6 +46,16 @@ public class TopServlet extends HttpServlet {
 			}
 		}
 
+		request.setAttribute("likeSearch", 1);
+
+		if (!StringUtils.isBlank(radiobutton) && radiobutton.equals("contain")) {
+			request.setAttribute("likeSearch", 2);
+		} else {
+			if (!StringUtils.isBlank(radiobutton) && radiobutton.equals("same")) {
+				request.setAttribute("likeSearch", 3);
+			}
+		}
+
 		//返信コメントを表示する
 		List<UserComment> comments = new CommentService().select();
 

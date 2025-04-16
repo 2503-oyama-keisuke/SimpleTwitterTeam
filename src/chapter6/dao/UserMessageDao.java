@@ -45,19 +45,20 @@ public class UserMessageDao {
 				}
 			}
 
+
 			sql.append("ORDER BY created_date DESC limit " + num);
 
 			ps = connection.prepareStatement(sql.toString());
 			ps.setString(1, start);
 			ps.setString(2, end);
 
-			if (userId != null) {
+			if(userId != null) {
 				ps.setInt(3, userId);
 
 				if (!StringUtils.isBlank(searchWord)) {
 					if (likeSearch.equals("startFrom")) {
 						ps.setString(4, searchWord + "%");
-					} else if (likeSearch.equals("contain")) {
+					} else if (likeSearch.equals("contain")){
 						ps.setString(4, "%" + searchWord + "%");
 					} else {
 						ps.setString(4, searchWord);
@@ -67,7 +68,7 @@ public class UserMessageDao {
 				if (!StringUtils.isBlank(searchWord)) {
 					if (likeSearch.equals("startFrom")) {
 						ps.setString(3, searchWord + "%");
-					} else if (likeSearch.equals("contain")) {
+					} else if (likeSearch.equals("contain")){
 						ps.setString(3, "%" + searchWord + "%");
 					} else {
 						ps.setString(3, searchWord);
