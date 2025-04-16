@@ -28,27 +28,22 @@ public class TopServlet extends HttpServlet {
 			isShowMessageForm = true;
 		}
 
-		// 完全一致検索追加
-		String searchWord = request.getParameter("word");
-		String radiobutton = request.getParameter("radiobutton");
+        String searchWord = request.getParameter("word");
+        String radiobutton = request.getParameter("radiobutton");
 		String userId = request.getParameter("user_id");
 		String start = request.getParameter("start");
-		String end = request.getParameter("end");
-
-		// 完全一致検索用に変更
-		List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
+        String end = request.getParameter("end");
+        List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
 
 		//返信コメントを表示する
 		List<UserComment> comments = new CommentService().select();
 
-		// 完全一致検索ワード
-		request.setAttribute("searchWord", request.getParameter("word"));
-
-		request.setAttribute("start", start);
-		request.setAttribute("end", end);
-		request.setAttribute("messages", messages);
-		request.setAttribute("comments", comments);
-		request.setAttribute("isShowMessageForm", isShowMessageForm);
-		request.getRequestDispatcher("/top.jsp").forward(request, response);
-	}
+        request.setAttribute("start", start);
+        request.setAttribute("end", end);
+        request.setAttribute("messages", messages);
+        request.setAttribute("comments", comments);
+        request.setAttribute("isShowMessageForm", isShowMessageForm);
+        request.setAttribute("searchWord", request.getParameter("word"));
+        request.getRequestDispatcher("/top.jsp").forward(request, response);
+    }
 }

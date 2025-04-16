@@ -19,21 +19,21 @@ public class MessageService {
 
 	public void insert(Message message) {
 
-		Connection connection = null;
-		try {
-			connection = getConnection();
-			new MessageDao().insert(connection, message);
-			commit(connection);
-		} catch (RuntimeException e) {
-			rollback(connection);
-			throw e;
-		} catch (Error e) {
-			rollback(connection);
-			throw e;
-		} finally {
-			close(connection);
-		}
-	}
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            new MessageDao().insert(connection, message);
+            commit(connection);
+        } catch (RuntimeException e) {
+            rollback(connection);
+            throw e;
+        } catch (Error e) {
+            rollback(connection);
+            throw e;
+        } finally {
+            close(connection);
+        }
+    }
 
 	public List<UserMessage> select(String userId, String start, String end, String searchWord, String likeSearch) {
 		final int LIMIT_NUM = 1000;
