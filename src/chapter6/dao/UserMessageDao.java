@@ -16,8 +16,7 @@ import chapter6.exception.SQLRuntimeException;
 
 public class UserMessageDao {
 
-	public List<UserMessage> select(Connection connection, Integer userId, String start, String end, String searchWord,
-			String likeSearch, int num) {
+	public List<UserMessage> select(Connection connection, Integer userId, String start, String end, String searchWord, String likeSearch, int num) {
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
@@ -33,57 +32,48 @@ public class UserMessageDao {
 			sql.append("ON messages.user_id = users.id ");
 			sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
 
-			if (userId != null) {
+			if(userId != null) {
 				sql.append("AND user_id = ? ");
 			}
 
 			if (!StringUtils.isBlank(searchWord)) {
-				sql.append(" AND messages.text like ? ");
+				if (!likeSearch.equals("same")) {
+					sql.append(" AND messages.text like ? ");
+				} else {
+					sql.append(" AND messages.text = ? ");
+				}
 			}
 
 			sql.append("ORDER BY created_date DESC limit " + num);
-
 			ps = connection.prepareStatement(sql.toString());
 			ps.setString(1, start);
 			ps.setString(2, end);
 
-			if (userId != null) {
+			if(userId != null) {
 				ps.setInt(3, userId);
 
 				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(4, searchWord + "%");
+					if (likeSearch.equals("startFrom")) {
+						ps.setString(4, searchWord + "%");
+					} else if (likeSearch.equals("contain")){
+						ps.setString(4, "%" + searchWord + "%");
+					} else {
+						ps.setString(4, searchWord);
+					}
 				}
 			} else {
 				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(3, searchWord + "%");
-				}
-			}
-
-			if (userId != null) {
-				ps.setInt(3, userId);
-
-				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(4, "%" + searchWord + "%");
-				}
-			} else {
-				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(3, "%" + searchWord + "%");
-				}
-			}
-			if (userId != null) {
-				ps.setInt(3, userId);
-
-				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(4, searchWord);
-				}
-			} else {
-				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(3, searchWord);
+					if (likeSearch.equals("startFrom")) {
+						ps.setString(3, searchWord + "%");
+					} else if (likeSearch.equals("contain")){
+						ps.setString(3, "%" + searchWord + "%");
+					} else {
+						ps.setString(3, searchWord);
+					}
 				}
 			}
 
 			ResultSet rs = ps.executeQuery();
-
 			List<UserMessage> messages = toUserMessages(rs);
 			return messages;
 		} catch (SQLException e) {
