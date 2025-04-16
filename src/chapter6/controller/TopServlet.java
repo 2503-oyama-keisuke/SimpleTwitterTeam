@@ -18,30 +18,37 @@ import chapter6.service.MessageService;
 @WebServlet(urlPatterns = { "/index.jsp" })
 public class TopServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 
+		boolean isShowMessageForm = false;
+		User user = (User) request.getSession().getAttribute("loginUser");
+		if (user != null) {
+			isShowMessageForm = true;
+		}
 
-        boolean isShowMessageForm = false;
-        User user = (User) request.getSession().getAttribute("loginUser");
-        if (user != null) {
-            isShowMessageForm = true;
-        }
-
+		// 完全一致検索追加
+		String searchWord = request.getParameter("word");
+		String radiobutton = request.getParameter("radiobutton");
 		String userId = request.getParameter("user_id");
 		String start = request.getParameter("start");
-        String end = request.getParameter("end");
-        List<UserMessage> messages = new MessageService().select(userId, start, end);
+		String end = request.getParameter("end");
 
-        //返信コメントを表示する
-        List<UserComment> comments = new CommentService().select();
+		// 完全一致検索用に変更
+		List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
 
-        request.setAttribute("start", start);
-        request.setAttribute("end", end);
-        request.setAttribute("messages", messages);
-        request.setAttribute("comments", comments);
-        request.setAttribute("isShowMessageForm", isShowMessageForm);
-        request.getRequestDispatcher("/top.jsp").forward(request, response);
-    }
+		//返信コメントを表示する
+		List<UserComment> comments = new CommentService().select();
+
+		// 完全一致検索ワード
+		request.setAttribute("searchWord", request.getParameter("word"));
+
+		request.setAttribute("start", start);
+		request.setAttribute("end", end);
+		request.setAttribute("messages", messages);
+		request.setAttribute("comments", comments);
+		request.setAttribute("isShowMessageForm", isShowMessageForm);
+		request.getRequestDispatcher("/top.jsp").forward(request, response);
+	}
 }
